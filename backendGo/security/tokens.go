@@ -2,9 +2,10 @@ package security
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 var secretKey = []byte("secret-key")
@@ -25,6 +26,7 @@ func CreateToken(username string) (string, error) {
 }
 
 func VerifyToken(tokenString string) error {
+	tokenString = strings.TrimPrefix(tokenString, "Bearer ")
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})

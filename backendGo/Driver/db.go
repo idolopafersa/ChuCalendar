@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
@@ -147,16 +148,17 @@ func UpdateMeal(meal structmodels.Meal) error {
 
 func GetExercise(name string) (structmodels.Exercise, error) {
 	var resul structmodels.Exercise
+	fmt.Print(name)
 	query := "SELECT * FROM Exercises WHERE name = ?"
 
-	err := db.QueryRow(query, name).Scan(resul.ID, resul.RoutineID, resul.Name, resul.Sets, resul.Repetitions, resul.Description, resul.PhotoURL)
+	err := db.QueryRow(query, name).Scan(&resul.ID, &resul.Name, &resul.Sets, &resul.Repetitions, &resul.Description, &resul.PhotoURL)
 	return resul, err
 }
 
 func PostExercise(nexercise structmodels.NewExercise) (int, error) {
 
-	query := "INSERT INTO Exercises (routine_id, name, sets, repetitions, description, photo_url) VALUES (?, ?, ?, ?, ?, ?)"
-	result, err := db.Exec(query, nexercise.RoutineID, nexercise.Name, nexercise.Sets, nexercise.Repetitions, nexercise.Description, nexercise.PhotoURL)
+	query := "INSERT INTO Exercises ( name, sets, repetitions, description, photo_url) VALUES ( ?, ?, ?, ?, ?)"
+	result, err := db.Exec(query, nexercise.Name, nexercise.Sets, nexercise.Repetitions, nexercise.Description, nexercise.PhotoURL)
 
 	if err != nil {
 		fmt.Print(err)
@@ -165,4 +167,193 @@ func PostExercise(nexercise structmodels.NewExercise) (int, error) {
 		id, _ := result.LastInsertId()
 		return int(id), nil
 	}
+}
+
+func DelExercise(name string) error {
+
+	query := "DELETE FROM Exercises where Name = ?"
+	_, err := db.Exec(query, name)
+	fmt.Print(err)
+	return err
+}
+
+func PutExercise(newexercise structmodels.Exercise) error {
+	query := `UPDATE Exercise SET name = ?, description = ?, calories = ?, proteins = ?, fats = ?, carbs = ?, photo_url = ? WHERE id = ?`
+
+	_, err := db.Exec(query, newexercise.Name, newexercise.Sets, newexercise.Repetitions, newexercise.Description, newexercise.ID)
+	fmt.Print(err)
+	return err
+}
+
+func PostRoutine(newRoutine structmodels.NewRoutine) (int, error) {
+	query := "INSERT INTO Routines (name, description, photo_url) VALUES (?, ?, ?)"
+	result, err := db.Exec(query, newRoutine.Name, newRoutine.Description, newRoutine.PhotoURL)
+
+	if err != nil {
+		fmt.Println("Error creating new routine:", err)
+		return 0, err
+	} else {
+		id, _ := result.LastInsertId()
+		return int(id), nil
+	}
+
+}
+
+func PutRoutine(routine structmodels.Routine) error {
+	query := `UPDATE Routines SET name = ?, description = ?, photo_url = ? WHERE id = ?`
+	_, err := db.Exec(query, routine.Name, routine.Description, routine.PhotoURL, routine.ID)
+	if err != nil {
+		fmt.Println("Error updating routine:", err)
+		return err
+	}
+	return nil
+}
+
+func GetRoutine(name string) (structmodels.Routine, error) {
+	var routine structmodels.Routine
+	query := "SELECT id, name, description, photo_url FROM Routines WHERE name = ?"
+	err := db.QueryRow(query, name).Scan(&routine.ID, &routine.Name, &routine.Description, &routine.PhotoURL)
+	if err != nil {
+		fmt.Println("Error getting routine:", err)
+		return routine, err
+	}
+	return routine, nil
+
+}
+
+func DelRoutine(name string) error {
+	var routineID int
+	queryGetID := "SELECT id FROM Routines WHERE name = ?"
+	db.QueryRow(queryGetID, name).Scan(&routineID)
+
+	query := "DELETE FROM RoutineExercises WHERE routine_id = ?;"
+	query2 := "DELETE FROM Routines where Name = ?"
+	_, err := db.Exec(query, routineID)
+	fmt.Print(err)
+	_, err2 := db.Exec(query2, name)
+	fmt.Print(err2)
+	return err
+}
+
+func AddExerciseToRoutine(routineID, exerciseID string) error {
+	query := "INSERT INTO RoutineExercises (routine_id, exercise_id) VALUES (?, ?)"
+	_, err := db.Exec(query, routineID, exerciseID)
+	return err
+}
+
+func RemoveExerciseFromRoutine(routineID, exerciseID string) error {
+	query := "DELETE FROM RoutineExercises WHERE routine_id = ? AND exercise_id = ?"
+	_, err := db.Exec(query, routineID, exerciseID)
+	return err
+}
+
+func GetExercisesInRoutine(routineID string) ([]structmodels.Exercise, error) {
+	query := `SELECT e.* FROM Exercises e
+              INNER JOIN RoutineExercises re ON e.id = re.exercise_id
+              WHERE re.routine_id = ?`
+
+	rows, err := db.Query(query, routineID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var exercises []structmodels.Exercise
+	for rows.Next() {
+		var exercise structmodels.Exercise
+		if err := rows.Scan(&exercise.ID, &exercise.Name, &exercise.Sets, &exercise.Repetitions, &exercise.Description, &exercise.PhotoURL); err != nil {
+			return nil, err
+		}
+		exercises = append(exercises, exercise)
+	}
+
+	return exercises, nil
+}
+
+func GetDay(userID string, date string) (structmodels.Day, error) {
+	var requestDay structmodels.Day
+	var routine structmodels.Routine
+
+	query := `SELECT d.id, d.user_id, d.date, d.routine_id, r.name, r.description, r.photo_url
+              FROM Days d
+              LEFT JOIN Routines r ON d.routine_id = r.id
+              WHERE d.user_id = ? AND d.date = ?`
+
+	err := db.QueryRow(query, userID, date).Scan(&requestDay.Id, &requestDay.UserId, &requestDay.Date, &requestDay.RoutineID, &routine.Name, &routine.Description, &routine.PhotoURL)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			// No day exists, create a new one
+			requestDay, dayID, err := CreateEmptyDay(userID, date)
+			if err != nil {
+				return requestDay, err
+			}
+			requestDay.Id = dayID
+		} else {
+			return requestDay, err
+		}
+	}
+
+	// Then retrieve associated meals for that day
+	requestDay.Meals, err = GetMealsForDay(requestDay.Id)
+	if err != nil {
+		return requestDay, err
+	}
+
+	return requestDay, nil
+}
+
+func CreateEmptyDay(userID string, date string) (structmodels.Day, int, error) {
+	var newDay structmodels.Day
+	query := "INSERT INTO Days (user_id, date, routine_id) VALUES (?, ?, -1)"
+
+	result, err := db.Exec(query, userID, date)
+	if err != nil {
+		fmt.Println(err)
+		return newDay, 0, err
+	}
+
+	dayID, err := result.LastInsertId()
+	if err != nil {
+		return newDay, 0, err
+	}
+
+	newDay.Id = int(dayID)
+	newDay.UserId, _ = strconv.Atoi(userID) // Convert string to int
+	newDay.Date = date
+	newDay.RoutineID = -1 // Set routine_id to -1 as no routine is assigned
+
+	return newDay, int(dayID), nil
+}
+
+func GetMealsForDay(dayID int) ([]structmodels.Meal, error) {
+	query := `
+        SELECT m.id, m.name, m.description, m.calories, m.proteins, m.fats, m.carbs, m.photo_url
+        FROM Meals m
+        INNER JOIN DayMeals dm ON m.id = dm.meal_id
+        WHERE dm.day_id = ?`
+
+	rows, err := db.Query(query, dayID)
+	if err != nil {
+		fmt.Println(err)
+		return nil, fmt.Errorf("error  meals for day %d: %v", dayID, err)
+	}
+	defer rows.Close()
+
+	var meals []structmodels.Meal
+	for rows.Next() {
+		var meal structmodels.Meal
+		if err := rows.Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.PhotoURL); err != nil {
+			return nil, fmt.Errorf("error scanning meal: %v", err)
+		}
+		meals = append(meals, meal)
+	}
+
+	return meals, nil
+}
+
+func AddMealToDay(dayID, mealID string) error {
+	query := "INSERT INTO DayMeals (day_id, meal_id) VALUES (?, ?)"
+	_, err := db.Exec(query, dayID, mealID)
+	return err
 }
