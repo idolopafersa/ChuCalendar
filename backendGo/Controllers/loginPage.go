@@ -19,10 +19,17 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	if driver.UserExists(creds.Username) && driver.CorrectPassword(creds.Username, creds.Password) {
 		token, _ := security.CreateToken(creds.Username)
+		//when a user sign in, they will receive a cookie to keep their JWT
+		cookie := http.Cookie{
+			Name:     "token",
+			Value:    token,
+			Path:     "/",
+			HttpOnly: true,
+			MaxAge:   3600,
+			Secure:   true,
+		}
+		http.SetCookie(w, &cookie)
 
-		w.Header().Set("Content-Type", "application/json")
-		response := map[string]string{"token": token}
-		json.NewEncoder(w).Encode(response)
 	} else {
 		http.Error(w, "User or password are wrong", http.StatusForbidden)
 	}

@@ -45,8 +45,17 @@ func PostExercise(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
-		fmt.Print(err)
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
@@ -70,15 +79,23 @@ func DelExercise(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Name parameter is missing", http.StatusBadRequest)
 		return
 	}
-	fmt.Println(r.Header.Get("Authorization"))
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
-		fmt.Print(err)
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
 
-	err := driver.DelExercise(name)
-	if err != nil {
+	erre := driver.DelExercise(name)
+	if erre != nil {
 		fmt.Print(err)
 		http.Error(w, "Exercise not found", http.StatusNotFound)
 		return
@@ -93,15 +110,24 @@ func PutExercise(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
-		fmt.Print(err)
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
 
-	err := driver.PutExercise(exercise)
+	erre := driver.PutExercise(exercise)
 	fmt.Print(err)
-	if err != nil {
+	if erre != nil {
 		http.Error(w, "Error al actualizar el ejercicio", http.StatusInternalServerError)
 		return
 	}

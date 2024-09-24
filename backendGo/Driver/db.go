@@ -357,3 +357,10 @@ func AddMealToDay(dayID, mealID string) error {
 	_, err := db.Exec(query, dayID, mealID)
 	return err
 }
+
+/*func CheckUser(userId, day string) bool {
+
+	query := "SELECT user_"
+	owner
+}
+*/

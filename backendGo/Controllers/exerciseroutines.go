@@ -16,7 +16,16 @@ func GetrExercises(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
 		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
@@ -37,14 +46,23 @@ func DelrExercise(w http.ResponseWriter, r *http.Request) {
 	routineID := r.URL.Query().Get("routine")
 	exerciseID := r.URL.Query().Get("exercise")
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
 		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
 
-	err := driver.RemoveExerciseFromRoutine(routineID, exerciseID)
-	if err != nil {
+	erre := driver.RemoveExerciseFromRoutine(routineID, exerciseID)
+	if erre != nil {
 		fmt.Println(err)
 		http.Error(w, "Error removing exercise from routine", http.StatusInternalServerError)
 		return
@@ -59,14 +77,23 @@ func AddrExercise(w http.ResponseWriter, r *http.Request) {
 	routineID := r.URL.Query().Get("routine")
 	exerciseID := r.URL.Query().Get("exercise")
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
 		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
 
-	err := driver.AddExerciseToRoutine(routineID, exerciseID)
-	if err != nil {
+	erre := driver.AddExerciseToRoutine(routineID, exerciseID)
+	if erre != nil {
 		fmt.Println(err)
 		http.Error(w, "Error adding exercise to routine", http.StatusInternalServerError)
 		return

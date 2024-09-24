@@ -16,8 +16,17 @@ func GetMeal(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Name parameter is missing", http.StatusBadRequest)
 		return
 	}
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
-		fmt.Print(err)
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
@@ -44,8 +53,17 @@ func PostMeal(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid payload", 400)
 	}
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
-		fmt.Print(err)
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
@@ -66,16 +84,25 @@ func DelMeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
-		fmt.Print(err)
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
 
 	fmt.Print(name)
 
-	err := driver.DelMeal(name)
-	if err != nil {
+	erre := driver.DelMeal(name)
+	if erre != nil {
 		http.Error(w, "No Meal", http.StatusNotFound)
 	}
 }
@@ -89,15 +116,24 @@ func PutMeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
-		fmt.Print(err)
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
 
-	err := driver.UpdateMeal(meal)
+	erre := driver.UpdateMeal(meal)
 	fmt.Print(err)
-	if err != nil {
+	if erre != nil {
 		http.Error(w, "Error al actualizar la comida", http.StatusInternalServerError)
 		return
 	}

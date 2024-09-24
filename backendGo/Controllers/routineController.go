@@ -18,7 +18,17 @@ func PostRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
 		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
@@ -43,12 +53,20 @@ func GetRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
 		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
-
 	routine, err := driver.GetRoutine(name)
 	if err != nil {
 		fmt.Println(err)
@@ -68,15 +86,24 @@ func PutRoutine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
 		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
 
-	err := driver.PutRoutine(routine)
-	if err != nil {
-		fmt.Println(err)
+	errw := driver.PutRoutine(routine)
+	if errw != nil {
+		fmt.Println(errw)
 		http.Error(w, "Error updating routine", http.StatusInternalServerError)
 		return
 	}
@@ -93,16 +120,24 @@ func DelRoutine(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Name parameter is missing", http.StatusBadRequest)
 		return
 	}
-	fmt.Println(r.Header.Get("Authorization"))
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
-		fmt.Print(err)
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
 
-	err := driver.DelRoutine(name)
-	if err != nil {
-		fmt.Print(err)
+	erre := driver.DelRoutine(name)
+	if erre != nil {
+		fmt.Print(erre)
 		http.Error(w, "routine not found", http.StatusNotFound)
 		return
 	}
