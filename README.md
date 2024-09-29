@@ -1,6 +1,6 @@
 # ChuCalendar
 
-Welcome to **ChuCalendar**! This is my first webpage project so if you have any suggestions please share ,  I created a  calendar application where you can keep your alimentation and exercise progress, ideal for people like me that has to measure everything.. 
+Welcome to **ChuCalendar**! This is my first webpage project so if you have any suggestions please share ,  I created a  calendar application where you can keep your alimentation and exercise progress, ideal for people like me that has to measure everything. Once is finished, itll be deployed in fit.fernandezpablo.es 
 
 ## I used
 
