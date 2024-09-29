@@ -45,7 +45,7 @@ func PostExercise(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("jwt_token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
@@ -79,7 +79,7 @@ func DelExercise(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Name parameter is missing", http.StatusBadRequest)
 		return
 	}
-	cookie, err := r.Cookie("jwt_token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
@@ -110,7 +110,7 @@ func PutExercise(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("jwt_token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
@@ -133,4 +133,40 @@ func PutExercise(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"message": "Ejercicio actualizada exitosamente"})
+}
+
+func GetAlExercises(w http.ResponseWriter, r *http.Request) {
+
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
+		http.Error(w, "Invalid JWT", http.StatusForbidden)
+		return
+	}
+
+	exercises, erre := driver.GetAlExercises()
+	if erre != nil {
+		fmt.Print(erre)
+		http.Error(w, "routine not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if len(exercises) > 0 {
+		fmt.Print("Hay mas de uno")
+		json.NewEncoder(w).Encode(exercises)
+	} else {
+		fmt.Print("Hay mas de uno")
+		w.Write([]byte("[]"))
+	}
+
 }

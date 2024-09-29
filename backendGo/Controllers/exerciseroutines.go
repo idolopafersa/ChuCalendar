@@ -16,7 +16,7 @@ func GetrExercises(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("jwt_token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
@@ -39,14 +39,20 @@ func GetrExercises(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(exercises)
+	if len(exercises) > 0 {
+		fmt.Print("Hay mas de uno")
+		json.NewEncoder(w).Encode(exercises)
+	} else {
+		fmt.Print("Hay mas de uno")
+		w.Write([]byte("[]"))
+	}
 }
 
 func DelrExercise(w http.ResponseWriter, r *http.Request) {
 	routineID := r.URL.Query().Get("routine")
 	exerciseID := r.URL.Query().Get("exercise")
 
-	cookie, err := r.Cookie("jwt_token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
@@ -77,7 +83,7 @@ func AddrExercise(w http.ResponseWriter, r *http.Request) {
 	routineID := r.URL.Query().Get("routine")
 	exerciseID := r.URL.Query().Get("exercise")
 
-	cookie, err := r.Cookie("jwt_token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return

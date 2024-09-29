@@ -16,7 +16,7 @@ func GetMeal(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Name parameter is missing", http.StatusBadRequest)
 		return
 	}
-	cookie, err := r.Cookie("jwt_token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
@@ -53,7 +53,7 @@ func PostMeal(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid payload", 400)
 	}
 
-	cookie, err := r.Cookie("jwt_token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
@@ -84,7 +84,7 @@ func DelMeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("jwt_token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
@@ -116,7 +116,7 @@ func PutMeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("jwt_token")
+	cookie, err := r.Cookie("token")
 	if err != nil {
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
@@ -139,4 +139,34 @@ func PutMeal(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"message": "Comida actualizada exitosamente"})
+}
+
+func AllMeals(w http.ResponseWriter, r *http.Request) {
+
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		fmt.Println(err)
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
+		http.Error(w, "Invalid JWT", http.StatusForbidden)
+		return
+	}
+
+	meals, erre := driver.GetAllMeals()
+	if erre != nil {
+		fmt.Print(erre)
+		http.Error(w, "meal not found", http.StatusNotFound)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(meals)
+
 }

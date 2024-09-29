@@ -1,0 +1,35 @@
+.hl-month {
+    width: 100%; /* Make width responsive */
+    max-width: 350px; /* Set a max width for larger screens */
+}
+
+.hl-day {
+    flex: 0 0 14.28%; /* 7 days a week */
+}
+
+.hl-followus :global(.hl-day-button) {
+    width: 50px; /* Increased button width */
+    height: 50px; /* Increased button height */
+    font-size: 1rem; /* Adjust font size for visibility */
+    padding: 0; /* Remove padding for better fit */
+}
+
+.hl-action-buttons {
+    width: 100%;
+    flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+    justify-content: center; /* Center the buttons */
+}
+
+@media (max-width: 400px) {
+    .hl-month {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center; /* Center elements */
+    }
+    .hl-followus :global(.hl-day-button) {
+        width: 40px; /* Reduce button size */
+        height: 40px; /* Reduce button size */
+    }
+    .hl-action-buttons {
+        justify-content: space-around; /* Space out action buttons */
+    }
+}

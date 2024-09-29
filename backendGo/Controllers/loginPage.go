@@ -5,6 +5,7 @@ import (
 	structmodels "backendgo/StructModels"
 	"backendgo/security"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -13,6 +14,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
+		fmt.Print(err)
 		http.Error(w, "Body errors", http.StatusBadRequest)
 		return
 	}
@@ -31,6 +33,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.SetCookie(w, &cookie)
 
 	} else {
+		fmt.Print(err)
 		http.Error(w, "User or password are wrong", http.StatusForbidden)
 	}
 

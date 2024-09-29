@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
@@ -209,10 +208,10 @@ func PutRoutine(routine structmodels.Routine) error {
 	return nil
 }
 
-func GetRoutine(name string) (structmodels.Routine, error) {
+func GetRoutine(id string) (structmodels.Routine, error) {
 	var routine structmodels.Routine
-	query := "SELECT id, name, description, photo_url FROM Routines WHERE name = ?"
-	err := db.QueryRow(query, name).Scan(&routine.ID, &routine.Name, &routine.Description, &routine.PhotoURL)
+	query := "SELECT id, name, description, photo_url FROM Routines WHERE id = ?"
+	err := db.QueryRow(query, id).Scan(&routine.ID, &routine.Name, &routine.Description, &routine.PhotoURL)
 	if err != nil {
 		fmt.Println("Error getting routine:", err)
 		return routine, err
@@ -221,16 +220,16 @@ func GetRoutine(name string) (structmodels.Routine, error) {
 
 }
 
-func DelRoutine(name string) error {
+func DelRoutine(id string) error {
 	var routineID int
-	queryGetID := "SELECT id FROM Routines WHERE name = ?"
-	db.QueryRow(queryGetID, name).Scan(&routineID)
+	queryGetID := "SELECT id FROM Routines WHERE id = ?"
+	db.QueryRow(queryGetID, id).Scan(&routineID)
 
 	query := "DELETE FROM RoutineExercises WHERE routine_id = ?;"
-	query2 := "DELETE FROM Routines where Name = ?"
+	query2 := "DELETE FROM Routines where id = ?"
 	_, err := db.Exec(query, routineID)
 	fmt.Print(err)
-	_, err2 := db.Exec(query2, name)
+	_, err2 := db.Exec(query2, id)
 	fmt.Print(err2)
 	return err
 }
@@ -270,20 +269,18 @@ func GetExercisesInRoutine(routineID string) ([]structmodels.Exercise, error) {
 	return exercises, nil
 }
 
-func GetDay(userID string, date string) (structmodels.Day, error) {
+func GetDay(userID int, date string) (structmodels.Day, error) {
 	var requestDay structmodels.Day
-	var routine structmodels.Routine
 
-	query := `SELECT d.id, d.user_id, d.date, d.routine_id, r.name, r.description, r.photo_url
-              FROM Days d
-              LEFT JOIN Routines r ON d.routine_id = r.id
-              WHERE d.user_id = ? AND d.date = ?`
+	query := `SELECT id, user_id, date, routine_id
+          FROM Days
+          WHERE user_id = ? AND date = ?`
 
-	err := db.QueryRow(query, userID, date).Scan(&requestDay.Id, &requestDay.UserId, &requestDay.Date, &requestDay.RoutineID, &routine.Name, &routine.Description, &routine.PhotoURL)
+	err := db.QueryRow(query, userID, date).Scan(&requestDay.Id, &requestDay.UserId, &requestDay.Date, &requestDay.RoutineID)
 
 	if err != nil {
 		if err == sql.ErrNoRows {
-			// No day exists, create a new one
+			fmt.Print(userID)
 			requestDay, dayID, err := CreateEmptyDay(userID, date)
 			if err != nil {
 				return requestDay, err
@@ -303,10 +300,10 @@ func GetDay(userID string, date string) (structmodels.Day, error) {
 	return requestDay, nil
 }
 
-func CreateEmptyDay(userID string, date string) (structmodels.Day, int, error) {
+func CreateEmptyDay(userID int, date string) (structmodels.Day, int, error) {
 	var newDay structmodels.Day
-	query := "INSERT INTO Days (user_id, date, routine_id) VALUES (?, ?, -1)"
-
+	query := "INSERT INTO Days (user_id, date) VALUES (?, ?)"
+	fmt.Println(query, userID, date)
 	result, err := db.Exec(query, userID, date)
 	if err != nil {
 		fmt.Println(err)
@@ -319,9 +316,8 @@ func CreateEmptyDay(userID string, date string) (structmodels.Day, int, error) {
 	}
 
 	newDay.Id = int(dayID)
-	newDay.UserId, _ = strconv.Atoi(userID) // Convert string to int
+	newDay.UserId = userID // Convert string to int
 	newDay.Date = date
-	newDay.RoutineID = -1 // Set routine_id to -1 as no routine is assigned
 
 	return newDay, int(dayID), nil
 }
@@ -333,14 +329,15 @@ func GetMealsForDay(dayID int) ([]structmodels.Meal, error) {
         INNER JOIN DayMeals dm ON m.id = dm.meal_id
         WHERE dm.day_id = ?`
 
+	meals := []structmodels.Meal{}
+
 	rows, err := db.Query(query, dayID)
 	if err != nil {
 		fmt.Println(err)
-		return nil, fmt.Errorf("error  meals for day %d: %v", dayID, err)
+		return nil, fmt.Errorf("error meals for day %d: %v", dayID, err)
 	}
 	defer rows.Close()
 
-	var meals []structmodels.Meal
 	for rows.Next() {
 		var meal structmodels.Meal
 		if err := rows.Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.PhotoURL); err != nil {
@@ -352,15 +349,123 @@ func GetMealsForDay(dayID int) ([]structmodels.Meal, error) {
 	return meals, nil
 }
 
-func AddMealToDay(dayID, mealID string) error {
+func AddMealToDay(date, userID, mealID string) error {
+	var dayid int
+	queryid := "SELECT id FROM Days WHERE user_id = ? AND date = ? "
+
+	db.QueryRow(queryid, userID, date).Scan(&dayid)
+
 	query := "INSERT INTO DayMeals (day_id, meal_id) VALUES (?, ?)"
-	_, err := db.Exec(query, dayID, mealID)
+	_, err := db.Exec(query, dayid, mealID)
 	return err
 }
 
-/*func CheckUser(userId, day string) bool {
+func DelMealToDay(date, userID, mealID string) error {
+	var dayid int
+	queryid := "SELECT id FROM Days WHERE user_id = ? AND date = ? "
 
-	query := "SELECT user_"
-	owner
+	db.QueryRow(queryid, userID, date).Scan(&dayid)
+
+	query := "DELETE FROM DayMeals WHERE day_id = ? AND meal_id = ?"
+	_, err := db.Exec(query, dayid, mealID)
+	return err
 }
-*/
+
+func GetUserID(name string) (int, error) {
+	var id int
+	fmt.Print(name)
+	query := `Select id FROM Users WHERE username=?`
+	err := db.QueryRow(query, name).Scan(&id)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			print(err)
+			return 0, err
+		}
+		print(err)
+		return 0, err
+	}
+
+	return id, nil
+}
+
+func AddRoutineToDay(date, userID, routineID string) error {
+	fmt.Printf("Date being used: %s\n", date)
+	var dayid int
+	queryid := "SELECT id FROM Days WHERE user_id = ? AND date = ? "
+
+	db.QueryRow(queryid, userID, date).Scan(&dayid)
+
+	query := "Update Days SET routine_id = ? WHERE id = ?"
+	_, erre := db.Exec(query, routineID, dayid)
+	fmt.Print(erre)
+	return erre
+}
+
+func GetAlRoutines() ([]structmodels.Routine, error) {
+	var routines []structmodels.Routine
+
+	rows, err := db.Query("SELECT * FROM Routines")
+	if err != nil {
+
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var routine structmodels.Routine
+		if err := rows.Scan(&routine.ID, &routine.Name, &routine.Description, &routine.PhotoURL); err != nil {
+			return nil, err
+		}
+		routines = append(routines, routine)
+	}
+
+	return routines, nil
+}
+
+func GetAlExercises() ([]structmodels.Exercise, error) {
+	var exercises []structmodels.Exercise
+
+	rows, err := db.Query("SELECT * FROM Exercises")
+	if err != nil {
+
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var exercise structmodels.Exercise
+		if err := rows.Scan(&exercise.ID, &exercise.Name, &exercise.Sets, &exercise.Repetitions, &exercise.Description, &exercise.PhotoURL); err != nil {
+			return nil, err
+		}
+		exercises = append(exercises, exercise)
+	}
+
+	return exercises, nil
+}
+
+func GetAllMeals() ([]structmodels.Meal, error) {
+	var meals []structmodels.Meal
+
+	// Make sure to explicitly select the columns
+	rows, err := db.Query("SELECT id, name, description, calories, proteins, fats, carbs, photo_url FROM Meals")
+	if err != nil {
+		return nil, fmt.Errorf("error querying meals: %v", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var meal structmodels.Meal
+		// Ensure the order of the columns matches the struct definition
+		if err := rows.Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.PhotoURL); err != nil {
+			return nil, fmt.Errorf("error scanning meal: %v", err)
+		}
+		meals = append(meals, meal)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("error with rows: %v", err)
+	}
+
+	return meals, nil
+}

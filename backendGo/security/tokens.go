@@ -2,6 +2,7 @@ package security
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 	"time"
 
@@ -55,4 +56,20 @@ func ExtractUser(tokenString string) (string, error) {
 	}
 
 	return "", fmt.Errorf("invalid token claims")
+}
+
+func VerifyCookie(w http.ResponseWriter, r *http.Request) {
+
+	cookie, err := r.Cookie("jwt_token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	jwtToken := cookie.Value
+
+	if err := VerifyToken(jwtToken); err != nil {
+		http.Error(w, "invalid token, good try hacker", http.StatusUnauthorized)
+	}
+	w.WriteHeader(http.StatusOK)
 }

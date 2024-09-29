@@ -1,0 +1,27 @@
+/* Header.css */
+.custom-navbar {
+    background: linear-gradient(to right, #003300 30%, #004d00 70%, #006600); /* Jungle green gradient */
+}
+
+.custom-navbar .navbar-brand,
+.custom-navbar .nav-link {
+    color: #fff; /* Text color */
+}
+
+.custom-navbar .nav-link:hover {
+    color: #ffcc00; /* Change hover color of nav links */
+}
+
+/* Dropdown Styles */
+.custom-navbar .dropdown-menu {
+    background: linear-gradient(to right, #003300 30%, #004d00 70%, #006600); /* Same gradient for dropdown */
+}
+
+.custom-navbar .dropdown-item {
+    color: #fff; /* Text color for dropdown items */
+}
+
+.custom-navbar .dropdown-item:hover {
+    background-color: rgba(255, 204, 0, 0.5); /* Semi-transparent yellow on hover */
+    color: #000; /* Change text color to black for contrast on hover */
+}

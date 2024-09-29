@@ -1,0 +1,65 @@
+.header {
+    background: linear-gradient(135deg, rgba(20, 92, 26, 0.8), rgba(0, 100, 0, 0.8)); /* Jungle-like green gradient */
+    color: white; /* Ensure text color is visible against the background */
+    padding: 20px; /* Add some padding */
+    text-align: center; /* Center the text */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: add a shadow for depth */
+    border-radius: 10px; /* Optional: rounded corners for a smoother look */
+}
+
+.HomeContainer {
+    display: flex;
+    justify-content: flex-start; /* Align components to the left */
+    height: 100vh; /* Full viewport height */
+    padding: 20px;
+    overflow: hidden; /* Prevent overflow of the main container */
+    background-image: url('../assets/backgroundHome.png'); /* Correctly reference background image */
+    background-size: cover; /* Cover the entire container */
+    background-position: center; /* Center the background image */
+    position: relative; /* Positioning context for children */
+}
+
+/* Ensure Dia component has a semi-transparent green background */
+.Dia {
+    width: 70%; /* Width of Dia component */
+    flex: 0 0 70%; 
+    overflow-y: auto; /* Enable vertical scrolling */
+    border-right: 1px solid rgba(255, 255, 255, 0.5); /* Light border */
+    padding-right: 10px;
+    background: linear-gradient(135deg, rgba(34, 139, 34, 0.5), rgba(0, 128, 0, 0.5)); /* Semi-transparent green background */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.Date {
+    background: linear-gradient(135deg, rgba(255, 165, 0, 0.8), rgba(255, 105, 180, 0.8)); /* Orange to pink gradient */
+    padding: 20px; /* Add some padding */
+    border-radius: 10px; /* Rounded corners for a smooth look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    flex: 1; /* Allow DatePicker to take the remaining space */
+    min-width: 300px; /* Minimum width to avoid it being too small */
+    overflow: hidden; /* Prevent overflow */
+}
+
+/* Optional: Smooth scrollbar appearance */
+.Dia::-webkit-scrollbar {
+    width: 8px;
+}
+
+.Dia::-webkit-scrollbar-thumb {
+    background-color: #888; 
+    border-radius: 10px;
+}
+
+.Dia::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .Dia {
+        flex: 0 0 100%; /* Full width on smaller screens */
+        max-width: 100%;
+        height: auto; /* Disable fixed height on small screens */
+    }
+}
