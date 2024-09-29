@@ -1,4 +1,4 @@
-# ChuCalendar
+# 🗓️ ChuCalendar
 
 Welcome to **ChuCalendar**! This is my first webpage project so if you have any suggestions please share ,  I created a  calendar application where you can keep your alimentation and exercise progress, ideal for people like me that has to measure everything. Once is finished, itll be deployed in fit.fernandezpablo.es 
 
@@ -6,7 +6,7 @@ Welcome to **ChuCalendar**! This is my first webpage project so if you have any 
 
 - **React**: A JavaScript library for building user interfaces.
 - **React Bootstrap**: A library that provides components
-- **Golang**: Used for building the backend of the application.
+- **Golang** : Used for building the backend of the application.
 - **MariaDB**: The database management system .
 
 
