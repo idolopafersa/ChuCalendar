@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🗓️ ChuCalendar
 
-## Getting Started
+Welcome to **ChuCalendar**! This is my first webpage project so if you have any suggestions please share ,  I created a  calendar application where you can keep your alimentation and exercise progress, ideal for people like me that has to measure everything. Once is finished, itll be deployed in fit.fernandezpablo.es 
 
-First, run the development server:
+## I used
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **React**: A JavaScript library for building user interfaces.
+- **React Bootstrap**: A library that provides components
+- **Golang** : Used for building the backend of the application.
+- **MariaDB**: The database management system .
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How to set up
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Database**: The database structure can be found in the `db` directory of this project.
+  Copy the database files to your local MariaDB instance using 
 
-## Learn More
+   ```bash
+   mysql -u username -p database_name < path_to_db_file.sql```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Backend**: First create an .env file and store your db credentials, also by default the socket is listeing in the 8080 port, you can change it
+    ```bash
+    usuariodb=user of de db
+    passdb=password of the db```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+ Execute
+    ```bash
+    go run main/main.go```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+3. **FrontEnd++ : install node_modules using npm and then execute.
+ ```bash
+    npm install
+    npm run dev```
