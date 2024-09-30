@@ -9,6 +9,7 @@ import {
 import './login.css';
 import { LoginUser, RegisterUser } from '../services/ApiLogin'; // Make sure to import your services
 import logo from '../assets/icono.png'; // Import the logo image
+import { useNavigate } from 'react-router-dom';
 
 export function Login() {
   // Variables of the component
@@ -17,19 +18,21 @@ export function Login() {
   const [showRegister, setShowRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState(''); // Handle error messages
-
+  const navigate = useNavigate()
   // Function that handles login or registration based on the state of showRegister
   const handleSubmit = async () => {
     try {
+      
       if (showRegister) {
         // If in registration mode
         await RegisterUser(user, email, password);
-        alert('Registration successful!');
+        localStorage.setItem('logged', 'true');
+        navigate("/home")
       } else {
         // If in login mode
         await LoginUser(user, password);
-        alert('Login successful!');
         localStorage.setItem('logged', 'true'); // Save session state
+        navigate("/home")
       }
     } catch (error) {
       setErrorMessage(error.message); // Handle errors

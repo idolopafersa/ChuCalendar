@@ -1,6 +1,3 @@
-
-
-
 .day-component {
     max-width: 800px;
     margin: 0 auto;
@@ -9,49 +6,66 @@
 .section-title {
     font-weight: bold;
     font-size: 1.5rem;
-    padding: 10px; /* Add padding for better spacing */
-    background-color: #f0f0f0; /* Light background for visibility */
-    border: 1px solid #ccc; /* Light border for separation */
-    border-radius: 5px; /* Rounded corners for aesthetics */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .routine-description {
     font-style: italic;
-    padding: 10px; /* Add padding */
-    background-color: #e9ffe9; /* Light green background */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
+    padding: 10px;
+    background-color: #e9ffe9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .exercise-item {
     padding: 10px;
-    background-color: #e0f7fa; /* Light blue background for exercises */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    margin-bottom: 10px; /* Space between items */
+    background-color: #e0f7fa;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 .meal-item {
     padding: 10px;
-    background-color: #fff3e0; /* Light orange background for meals */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    margin-bottom: 10px; /* Space between items */
+    background-color: #fff3e0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 .meal-description-card {
     margin-top: 20px;
-    background-color: #ffeb3b; /* Bright yellow background for descriptions */
-    border: 1px solid #ccc; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    padding: 15px; /* Add padding for better readability */
+    background-color: #ffeb3b;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
 }
 
 .meal-image {
     margin-top: 15px;
     max-height: 250px;
     object-fit: cover;
-    border-radius: 5px; /* Rounded corners for images */
-    border: 1px solid #ccc; /* Light border for images */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+h2 {
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    display: inline-block;
+}
+
+.routine-name {
+    color: #ffffff;
+    background-color: rgba(0, 123, 255, 0.5);
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
 }

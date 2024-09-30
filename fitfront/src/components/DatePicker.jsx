@@ -82,10 +82,10 @@ const DatePicker = ({ selectedDate, onChange }) => {
             <div key={day} className="hl-day d-flex justify-content-center">
               <Button
                 onClick={() => {
-                  const selectedDay = new Date(day); // Create a new Date object to avoid modifying the original
-                  selectedDay.setDate(selectedDay.getDate() + 1); // Add one day
-                  setShowDate(day); // Set the showDate to the selected day
-                  onChange(selectedDay); // Trigger the onChange prop with the adjusted day
+                  const selectedDay = new Date(day); 
+                  selectedDay.setDate(selectedDay.getDate()); 
+                  setShowDate(day); 
+                  onChange(selectedDay); 
                 }}
                 className={`hl-day-button rounded-circle p-0 ${!highlightSelectedDate && 'hl-bc0 border-0'}`}
                 variant={highlightSelectedDate ? 'primary' : 'light'}

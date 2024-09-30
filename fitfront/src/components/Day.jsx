@@ -16,7 +16,7 @@ const DayComponent = ({ date }) => {
   const [dayData, setDayData] = useState({ meals: [] });
   const [routineData, setRoutineData] = useState(null);
   const [routineExercises, setRoutineExercises] = useState([]);
-  const [selectedMeal, setSelectedMeal] = useState(null);
+  const [selectedMeal, setSelectedMeal] = useState(null); // State for selected meal
   const [showMealSelector, setShowMealSelector] = useState(false);
   const [showRoutineSelector, setShowRoutineSelector] = useState(false);
   const [availableMeals, setAvailableMeals] = useState([]);
@@ -24,6 +24,9 @@ const DayComponent = ({ date }) => {
 
   // Fetch day data whenever the date changes
   useEffect(() => {
+    // Reset the selected meal when the date changes
+    setSelectedMeal(null);  // Clear the selected meal
+
     fetchDayByDate(date)
       .then((data) => {
         setDayData(data || { meals: [] }); // Set day data or default to empty meals array
@@ -37,7 +40,7 @@ const DayComponent = ({ date }) => {
         }
       })
       .catch((error) => console.error('Error fetching day data:', error));
-  }, [date]);
+  }, [date]); // Added date as a dependency, so this runs every time the date changes
 
   // Fetch all meals and routines only once
   useEffect(() => {
@@ -51,7 +54,7 @@ const DayComponent = ({ date }) => {
   }, []);
 
   const handleMealClick = (meal) => {
-    setSelectedMeal(meal);
+    setSelectedMeal(meal); // Set the selected meal when a meal is clicked
   };
 
   const handleAddMeal = () => {
@@ -119,6 +122,7 @@ const DayComponent = ({ date }) => {
         <>
           <h2 className="text-center mb-5">{new Date(dayData.date).toDateString()}</h2>
 
+          {/* Routine Section */}
           <div className="mb-4">
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h3 className="section-title">Routine</h3>
@@ -128,7 +132,7 @@ const DayComponent = ({ date }) => {
             </div>
             {routineData ? (
               <div className="routine-details">
-                <h4 className="routine-name">{routineData.name}</h4> {/* Add this line to display the routine name */}
+                <h4 className="routine-name">{routineData.name}</h4>
                 <p className="routine-description text-muted">{routineData.description}</p>
                 <h5 className="mb-3">Exercises:</h5>
                 <ul className="list-group">
@@ -140,7 +144,7 @@ const DayComponent = ({ date }) => {
                 </ul>
               </div>
             ) : (
-              <p className="text-muted">No routine assigned for this day.</p> // Display if no routine exists
+              <p className="text-muted">No routine assigned for this day.</p>
             )}
           </div>
 
@@ -208,7 +212,7 @@ const DayComponent = ({ date }) => {
                         <li key={meal.id} className="list-group-item d-flex justify-content-between align-items-center">
                           <span>{meal.name}</span>
                           <button className="btn btn-primary" onClick={() => handleSelectMeal(meal)}>
-                            Add Meal
+                            Add
                           </button>
                         </li>
                       ))}
@@ -230,7 +234,7 @@ const DayComponent = ({ date }) => {
               <div className="modal-dialog" role="document">
                 <div className="modal-content">
                   <div className="modal-header">
-                    <h5 className="modal-title">Select a Routine to Change</h5>
+                    <h5 className="modal-title">Select a Routine to Assign</h5>
                     <button type="button" className="close" onClick={() => setShowRoutineSelector(false)}>
                       <span>&times;</span>
                     </button>
@@ -241,7 +245,7 @@ const DayComponent = ({ date }) => {
                         <li key={routine.id} className="list-group-item d-flex justify-content-between align-items-center">
                           <span>{routine.name}</span>
                           <button className="btn btn-primary" onClick={() => handleSelectRoutine(routine)}>
-                            Change Routine
+                            Assign
                           </button>
                         </li>
                       ))}
