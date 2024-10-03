@@ -177,13 +177,20 @@ func DelExercise(id string) error {
 }
 
 func PutExercise(newexercise structmodels.Exercise) error {
-	query := `UPDATE Exercises SET name = ?, description = ?, repetitions = ?, description = ?,  photo_url = ? WHERE id = ?`
+	query := `UPDATE Exercises SET name = ?, description = ?, sets = ?, repetitions = ?, photo_url = ? WHERE id = ?`
+	res, err := db.Exec(query, newexercise.Name, newexercise.Description, newexercise.Sets, newexercise.Repetitions, newexercise.PhotoURL, newexercise.ID)
+	if err != nil {
+		fmt.Printf("Error executing query: %v\n", err)
+		return err
+	}
 
-	_, err := db.Exec(query, newexercise.Name, newexercise.Sets, newexercise.Repetitions, newexercise.Description, newexercise.PhotoURL, newexercise.ID)
-	fmt.Print(err)
-	return err
+	rowsAffected, _ := res.RowsAffected()
+	fmt.Printf("Rows affected: %d\n", rowsAffected)
+	if rowsAffected == 0 {
+		return fmt.Errorf("No exercise found with id: %d", newexercise.ID)
+	}
+	return nil
 }
-
 func PostRoutine(newRoutine structmodels.NewRoutine) (int, error) {
 	query := "INSERT INTO Routines (name, description, photo_url) VALUES (?, ?, ?)"
 	result, err := db.Exec(query, newRoutine.Name, newRoutine.Description, newRoutine.PhotoURL)

@@ -1,69 +1,71 @@
 .exercise-container {
-    padding: 20px;
-    background-color: #f1f9f0; /* Light green background */
-  }
-  
-  .exercise-list {
-    background-color: #e0f7e9; /* Light greenish background */
-    border-radius: 10px;
-    padding: 15px;
-  }
-  
-  .list-title {
-    color: #2f8f2a; /* Dark green */
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 15px;
-  }
-  
-  .exercise-item {
-    cursor: pointer;
-    background-color: #e8fbe4; /* Very light green */
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s, transform 0.3s;
-  }
-  
-  .exercise-item:hover {
-    background-color: #c7e9c9;
-    transform: scale(1.02);
-  }
-  
-  .exercise-details {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .exercise-details .card-title {
-    color: #2a7f2f; /* Darker green */
-  }
-  
-  .exercise-img {
-    width: 100%;
-    height: auto;
-    margin-top: 10px;
-    border-radius: 5px;
-  }
-  
-  .exercise-actions {
-    margin-top: 20px;
-  }
-  
-  .exercise-actions button {
-    margin-right: 10px;
-  }
-  
-  h4 {
-    color: #2a7f2f; /* Darker green */
-    font-weight: bold;
-  }
-  
-  p {
-    color: #3b6e3d;
-    font-size: 16px;
-    margin: 5px 0;
-  }
-  
+  padding-top: 80px; /* To prevent content from going under the fixed header */
+}
+
+.exercise-list {
+  background-color: #e6f5e1; /* Light green background for the list */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
+.scrollable-list {
+  max-height: 400px; /* Define max height for the scrollable list */
+  overflow-y: auto; /* Enable vertical scrolling */
+  background-color: #eafbea; /* Slightly darker green for scrollable list area */
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.exercise-item {
+  background-color: #c2eacb; /* Medium green for each item */
+  border: none;
+  color: #2f4f2f; /* Darker green text for contrast */
+  border-radius: 5px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s;
+}
+
+.exercise-item:hover {
+  background-color: #a1d8a2; /* Darker green on hover */
+  cursor: pointer;
+}
+
+.exercise-details {
+  background-color: #f0f9f0; /* Soft green for details section */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.exercise-details h4 {
+  color: #2f4f2f; /* Darker green for headers */
+}
+
+.exercise-actions {
+  margin-top: 20px;
+}
+
+.exercise-actions .btn-success {
+  background-color: #4caf50; /* Green button for delete */
+  border: none;
+}
+
+.exercise-actions .btn-secondary {
+  background-color: #8fbc8f; /* Light green for modify */
+  border: none;
+}
+
+.exercise-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.list-title {
+  font-weight: bold;
+  color: #2f4f2f; /* Dark green for the title */
+  margin-bottom: 15px;
+}

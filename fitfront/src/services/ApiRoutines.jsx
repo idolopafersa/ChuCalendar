@@ -29,13 +29,14 @@ export const fetchRoutine = async (id) => {
   if (!response.ok) {
     throw new Error('Failed to fetch routine details');
   }
+ 
   return response.json();
 };
 
 export const createRoutine = async (newRoutine) => {
   const response = await fetch(`${API_URL}/routine/post`, {
-    method: 'POST', // Use POST method to create a new routine
-    credentials: 'include', // Include credentials for authentication
+    method: 'POST', 
+    credentials: 'include', 
     headers: {
       'Content-Type': 'application/json', 
     },

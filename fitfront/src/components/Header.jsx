@@ -15,7 +15,10 @@ export function Header() {
   const handleSignOut = () => {
     localStorage.setItem("logged", "false"); 
     navigate("/login");
-};
+  };
+  const handleHome = () => {
+    navigate("/home");
+  };
 
   return (
     <Navbar expand="lg" className="custom-navbar"> {/* Apply the custom class */}
@@ -24,7 +27,7 @@ export function Header() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
+            <Nav.Link onClick={handleHome} href="#home">Home</Nav.Link>
             <Nav.Link href="#link">About</Nav.Link>
             <NavDropdown title={username} id="basic-nav-dropdown">
               <NavDropdown.Item onClick={handleSignOut} href="#action/3.1">Sign out</NavDropdown.Item>

@@ -1,0 +1,40 @@
+.routine-container {
+    padding-top: 80px; /* To prevent content from going under the fixed header */
+  }
+  
+  .routine-list {
+    height: 500px; /* Adjust height */
+  }
+  
+  .scrollable-list {
+    max-height: 400px; /* Define max height for the scrollable list */
+    overflow-y: auto; /* Enable vertical scrolling */
+  }
+  
+  .routine-img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .routine-actions {
+    margin-top: 20px;
+  }
+  
+  .list-title {
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  .routine-details {
+    padding: 20px;
+  }
+  
+  .button-success {
+    background-color: #28a745; /* Bootstrap's success color */
+    border: none;
+  }
+  
+  .button-success:hover {
+    background-color: #218838; /* Darker shade on hover */
+  }
+  

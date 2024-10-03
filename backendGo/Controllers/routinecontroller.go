@@ -46,10 +46,10 @@ func PostRoutine(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetRoutine(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("routine")
+	id := r.URL.Query().Get("id")
 
-	if name == "" {
-		http.Error(w, "routine parameter is missing", http.StatusBadRequest)
+	if id == "" {
+		http.Error(w, "id parameter is missing", http.StatusBadRequest)
 		return
 	}
 
@@ -67,7 +67,7 @@ func GetRoutine(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
-	routine, err := driver.GetRoutine(name)
+	routine, err := driver.GetRoutine(id)
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, "Routine not found", http.StatusNotFound)

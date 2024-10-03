@@ -136,7 +136,7 @@ func PutExercise(w http.ResponseWriter, r *http.Request) {
 	}
 
 	erre := driver.PutExercise(exercise)
-	fmt.Print(err)
+	fmt.Print(erre)
 	if erre != nil {
 		fmt.Print(erre)
 		http.Error(w, "Error al actualizar el ejercicio", http.StatusInternalServerError)
