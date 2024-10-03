@@ -103,12 +103,14 @@ func hashPassword(password string) (string, error) {
 	return string(hashed), err
 }
 
-func GetMeal(name string) (structmodels.Meal, error) {
+func GetMeal(id string) (structmodels.Meal, error) {
 	var meal structmodels.Meal
-	query := "SELECT * FROM Meals WHERE name = ?"
+	fmt.Printf("LLEGO AQUI con ID: %s", id)
+	query := "SELECT * FROM Meals WHERE id = ?"
 
-	err := db.QueryRow(query, name).Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.PhotoURL)
+	err := db.QueryRow(query, id).Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.PhotoURL)
 	fmt.Print(err)
+
 	return meal, err
 
 }

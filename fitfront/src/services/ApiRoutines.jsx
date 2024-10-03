@@ -124,7 +124,7 @@ export const postExerciseRoutine = async (idRoutine,idExercise) => {
 
 export const delExerciseRoutine = async (idRoutine,idExercise) => {
   
-  const response = await fetch(`${API_URL}/exercises/routines/get?routine=${idRoutine}&&exercise=${idExercise}`, {
+  const response = await fetch(`${API_URL}/exercises/routines/del?routine=${idRoutine}&&exercise=${idExercise}`, {
     method: 'DELETE',
     credentials: 'include',
   });

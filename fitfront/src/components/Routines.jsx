@@ -5,9 +5,11 @@ import {
   deleteRoutine,
   updateRoutine,
   postExerciseRoutine,
-  fetchExercisesForRoutine
+  fetchExercisesForRoutine,
+  createRoutine,
+  delExerciseRoutine,
 } from '../services/ApiRoutines';
-import {fetcheExercises} from '../services/ApiExercises.jsx';
+import { fetcheExercises } from '../services/ApiExercises.jsx';
 import { ListGroup, Button, Container, Row, Col, Modal, Form } from 'react-bootstrap';
 import './Routines.css';
 import { Header } from './Header.jsx';
@@ -17,13 +19,14 @@ export function Routines() {
   const [selectedRoutine, setSelectedRoutine] = useState(null);
   const [showModifyModal, setShowModifyModal] = useState(false);
   const [showAddExerciseModal, setShowAddExerciseModal] = useState(false);
+  const [showAddRoutineModal, setShowAddRoutineModal] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     photo_url: ''
   });
-  const [exercises, setExercises] = useState([]); // To hold exercises for the selected routine
-  const [remainingExercises, setRemainingExercises] = useState([]); // To hold all exercises not in routine
+  const [exercises, setExercises] = useState([]);
+  const [remainingExercises, setRemainingExercises] = useState([]);
   const [exerciseIdToAdd, setExerciseIdToAdd] = useState('');
 
   useEffect(() => {
@@ -49,12 +52,10 @@ export function Routines() {
         photo_url: data.photo_url || ''
       });
       
-      // Fetch exercises for the selected routine
       const routineExercises = await fetchExercisesForRoutine(id);
       setExercises(routineExercises);
 
-      // Fetch all exercises to show the remaining ones
-      const allExercises = await fetcheExercises(); // Assuming this function exists
+      const allExercises = await fetcheExercises(); 
       const associatedExerciseIds = routineExercises.map(ex => ex.id);
       const remaining = allExercises.filter(ex => !associatedExerciseIds.includes(ex.id));
       setRemainingExercises(remaining);
@@ -91,11 +92,11 @@ export function Routines() {
     }
   };
 
-  const handleAddExercise = async () => {
+  const handleAddExercise = async (exerciseId) => {
     try {
       if (selectedRoutine) {
-        await postExerciseRoutine(selectedRoutine.id, exerciseIdToAdd);
-        // Update the exercises and remaining exercises after adding
+        await postExerciseRoutine(selectedRoutine.id, exerciseId);
+
         const updatedExercises = await fetchExercisesForRoutine(selectedRoutine.id);
         setExercises(updatedExercises);
 
@@ -105,10 +106,27 @@ export function Routines() {
         setRemainingExercises(remaining);
         
         setShowAddExerciseModal(false);
-        setExerciseIdToAdd(''); // Clear input
       }
     } catch (error) {
       console.error('Error adding exercise:', error);
+    }
+  };
+
+  const handleRemoveExercise = async (exerciseId) => {
+    try {
+      if (selectedRoutine) {
+        await delExerciseRoutine(selectedRoutine.id, exerciseId);
+
+        const updatedExercises = await fetchExercisesForRoutine(selectedRoutine.id);
+        setExercises(updatedExercises);
+
+        const allExercises = await fetcheExercises();
+        const associatedExerciseIds = updatedExercises.map(ex => ex.id);
+        const remaining = allExercises.filter(ex => !associatedExerciseIds.includes(ex.id));
+        setRemainingExercises(remaining);
+      }
+    } catch (error) {
+      console.error('Error removing exercise:', error);
     }
   };
 
@@ -119,12 +137,26 @@ export function Routines() {
     });
   };
 
+  const handleAddRoutine = async () => {
+    try {
+      const newRoutine = {
+        ...formData,
+      };
+
+      const createdRoutine = await createRoutine(newRoutine);
+      setRoutines([...routines, createdRoutine]);
+      setShowAddRoutineModal(false);
+      setFormData({ name: '', description: '', photo_url: '' });
+    } catch (error) {
+      console.error('Error adding routine:', error);
+    }
+  };
+
   return (
     <div>
       <Header />
       <Container className="routine-container">
         <Row>
-          {/* Routine List */}
           <Col md={4}>
             <div className="routine-list">
               <h5 className="list-title">Routine List</h5>
@@ -140,10 +172,12 @@ export function Routines() {
                   </ListGroup.Item>
                 ))}
               </ListGroup>
+              <Button variant="primary" onClick={() => setShowAddRoutineModal(true)}>
+                Add Routine
+              </Button>
             </div>
           </Col>
 
-          {/* Routine Details */}
           <Col md={8}>
             {selectedRoutine ? (
               <div className="routine-details">
@@ -159,7 +193,18 @@ export function Routines() {
                 <h5>Exercises</h5>
                 <ListGroup>
                   {exercises.map(exercise => (
-                    <ListGroup.Item key={exercise.id}>{exercise.name}</ListGroup.Item>
+                    <ListGroup.Item 
+                      key={exercise.id} // Ensure this key is unique
+                      className="d-flex justify-content-between"
+                    >
+                      {exercise.name}
+                      <Button
+                        variant="danger"
+                        onClick={() => handleRemoveExercise(exercise.id)}
+                      >
+                        Remove
+                      </Button>
+                    </ListGroup.Item>
                   ))}
                 </ListGroup>
                 <div className="routine-actions">
@@ -243,10 +288,7 @@ export function Routines() {
                   <Button
                     variant="success"
                     className="ms-2"
-                    onClick={() => {
-                      setExerciseIdToAdd(exercise.id);
-                      handleAddExercise();
-                    }}
+                    onClick={() => handleAddExercise(exercise.id)}
                   >
                     Add
                   </Button>
@@ -257,6 +299,52 @@ export function Routines() {
           <Modal.Footer>
             <Button variant="secondary" onClick={() => setShowAddExerciseModal(false)}>
               Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Modal for adding a new routine */}
+        <Modal show={showAddRoutineModal} onHide={() => setShowAddRoutineModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add New Routine</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group>
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Photo URL</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="photo_url"
+                  value={formData.photo_url}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowAddRoutineModal(false)}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleAddRoutine}>
+              Add Routine
             </Button>
           </Modal.Footer>
         </Modal>

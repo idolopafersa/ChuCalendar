@@ -26,6 +26,7 @@ func main() {
 
 	//Para hacer login y register
 	r.HandleFunc("/api/login", controllers.Login).Methods("POST")
+	r.HandleFunc("/api/logout", controllers.Logout).Methods("GET")
 	r.HandleFunc("/api/user/register", controllers.CreateUser).Methods("POST")
 	r.HandleFunc("/api/cookie", security.VerifyCookie).Methods("GET")
 

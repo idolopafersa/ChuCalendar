@@ -19,7 +19,7 @@ export const fetchDayByDate = async (date) => {
 
 
 export const fetchRoutineById = async (routineId) => {
-  const response = await fetch(`${API_URL}/routine/get?routine=${routineId}`, {
+  const response = await fetch(`${API_URL}/routine/get?id=${routineId}`, {
     credentials: 'include',
   });
 

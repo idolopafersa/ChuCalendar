@@ -1,0 +1,34 @@
+
+.meal-container {
+    margin-top: 20px;
+  }
+  
+  .list-title {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .meal-item {
+    cursor: pointer;
+  }
+  
+  .meal-details {
+    padding: 20px;
+    border: 1px solid #ccc;
+  }
+  
+  .meal-img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+  }
+  
+  .scrollable-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .meal-actions {
+    margin-top: 10px;
+  }
+  

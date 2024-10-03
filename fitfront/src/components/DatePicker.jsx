@@ -24,6 +24,7 @@ const DatePicker = ({ selectedDate, onChange }) => {
     return m;
   }, [showDate]);
 
+
   return (
     <div className="hl-followus">
       <div className="hl-month d-flex flex-wrap flex-row align-items-baseline justify-content-between px-3 pt-3 bg-primary text-light">
@@ -101,9 +102,10 @@ const DatePicker = ({ selectedDate, onChange }) => {
 
       {/* Action Buttons */}
       <div className="hl-action-buttons d-flex justify-content-between mt-3 flex-wrap">
-        <Button variant="success" className="m-1">Exercises</Button>
-        <Button variant="info" className="m-1">Meals</Button>
-        <Button variant="warning" className="m-1">Routines</Button>
+        <Button variant="success" useNavigate="/exercises" className="m-1">Exercises</Button>
+        <Button variant="info" 
+       useNavigate="/meals"   className="m-1">Meals</Button>
+        <Button variant="warning" useNavigate="/routines"   className="m-1">Routines</Button>
       </div>
     </div>
   );

@@ -1,14 +1,22 @@
 import { useState, useEffect } from 'react';
-import { fetcheExercises, fetchExercise, deleteExercise, modifyExercise } from '../services/ApiExercises';
+import { fetcheExercises, fetchExercise, deleteExercise, modifyExercise, addExercise } from '../services/ApiExercises'; // Ensure addExercise is imported
 import { ListGroup, Button, Container, Row, Col, Modal, Form } from 'react-bootstrap';
 import './Exercises.css'; // Import the updated CSS file
-import {Header} from './Header.jsx'; 
+import { Header } from './Header.jsx'; 
 
 export function Exercises() {
   const [exercises, setExercises] = useState([]);
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [showModifyModal, setShowModifyModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false); // New state for adding exercises
   const [formData, setFormData] = useState({
+    name: '',
+    sets: '',
+    repetitions: '',
+    description: '',
+    photo_url: ''
+  });
+  const [newExerciseFormData, setNewExerciseFormData] = useState({
     name: '',
     sets: '',
     repetitions: '',
@@ -73,9 +81,36 @@ export function Exercises() {
     }
   };
 
+  const handleAddExercise = async () => {
+    try {
+      const newExercise = {
+        ...newExerciseFormData,
+        sets: parseInt(newExerciseFormData.sets, 10),          
+        repetitions: parseInt(newExerciseFormData.repetitions, 10) 
+      };
+
+      await addExercise(newExercise);
+
+      const data = await fetcheExercises();
+      setExercises(data);
+
+      setShowAddModal(false);
+      setNewExerciseFormData({ name: '', sets: '', repetitions: '', description: '', photo_url: '' });
+    } catch (error) {
+      console.error('Error adding exercise:', error);
+    }
+  };
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleNewExerciseChange = (e) => {
+    setNewExerciseFormData({
+      ...newExerciseFormData,
       [e.target.name]: e.target.value
     });
   };
@@ -85,14 +120,13 @@ export function Exercises() {
       <Header /> {/* Always display Header */}
       <Container className="exercise-container">
         <Row>
-          {/* Exercise List */}
           <Col md={4}>
             <div className="exercise-list">
               <h5 className="list-title">Exercise List</h5>
-              <ListGroup className="scrollable-list"> {/* Add scroll class */}
+              <ListGroup className="scrollable-list">
                 {exercises.map((exercise) => (
                   <ListGroup.Item
-                    key={exercise.id} // Ensure exercise.id is unique for each exercise
+                    key={exercise.id}
                     className="exercise-item"
                     action
                     onClick={() => handleSelectExercise(exercise.id)}
@@ -104,7 +138,6 @@ export function Exercises() {
             </div>
           </Col>
 
-          {/* Exercise Details */}
           <Col md={8}>
             {selectedExercise ? (
               <div className="exercise-details">
@@ -137,6 +170,74 @@ export function Exercises() {
             )}
           </Col>
         </Row>
+
+        <Button variant="primary" onClick={() => setShowAddModal(true)}>
+          Add Exercise
+        </Button>
+
+        {/* Modal for adding exercise */}
+        <Modal show={showAddModal} onHide={() => setShowAddModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add New Exercise</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group>
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={newExerciseFormData.name}
+                  onChange={handleNewExerciseChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Sets</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="sets"
+                  value={newExerciseFormData.sets}
+                  onChange={handleNewExerciseChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Repetitions</Form.Label>
+                <Form.Control
+                  type="number"
+                  name="repetitions"
+                  value={newExerciseFormData.repetitions}
+                  onChange={handleNewExerciseChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  name="description"
+                  value={newExerciseFormData.description}
+                  onChange={handleNewExerciseChange}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Photo URL</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="photo_url"
+                  value={newExerciseFormData.photo_url}
+                  onChange={handleNewExerciseChange}
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowAddModal(false)}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleAddExercise}>
+              Add Exercise
+            </Button>
+          </Modal.Footer>
+        </Modal>
 
         {/* Modal for modifying exercise */}
         <Modal show={showModifyModal} onHide={() => setShowModifyModal(false)}>

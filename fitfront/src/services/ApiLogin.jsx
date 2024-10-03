@@ -1,4 +1,3 @@
-import { Navigate } from "react-router-dom";
 const API_URL = 'http://localhost:8080'
 
 
@@ -55,29 +54,18 @@ export const RegisterUser = async (user,mail, password) => {
 };
 
 
-export const CheckCookie = async () => {
-    
-    try {
-        const navigate = Navigate();
-        const response = await fetch(`${API_URL}/api/cookie`, {
+export const Logout = async () => {
+        await fetch(`${API_URL}/api/logout"`, {
             method: 'GET',
             credentials: 'include', 
         });
-        console.log('Response from CheckCookie:', response); 
-        if (!response.ok) {
         localStorage.setItem("logged","false")
-        navigate('/login')
-        }
+       
+        
 
-        localStorage.setItem("logged","true")
-        return response; 
-    } catch (error) {
-        const navigate = Navigate();
-        console.error('Error checking cookie', error);
-        localStorage.setItem("logged","false") 
-        navigate('/login')
-        throw error; 
-    }
+       
+
 }
+
 
 

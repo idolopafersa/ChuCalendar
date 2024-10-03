@@ -10,10 +10,10 @@ import (
 )
 
 func GetMeal(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("name")
+	id := r.URL.Query().Get("id")
 
-	if name == "" {
-		http.Error(w, "Name parameter is missing", http.StatusBadRequest)
+	if id == "" {
+		http.Error(w, "id parameter is missing", http.StatusBadRequest)
 		return
 	}
 	cookie, err := r.Cookie("token")
@@ -31,8 +31,8 @@ func GetMeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Print(name)
-	meal, err := driver.GetMeal(name)
+	fmt.Print(id)
+	meal, err := driver.GetMeal(id)
 	fmt.Print(err)
 	if err != nil {
 
@@ -145,7 +145,6 @@ func AllMeals(w http.ResponseWriter, r *http.Request) {
 
 	cookie, err := r.Cookie("token")
 	if err != nil {
-		fmt.Println(err)
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
 	}

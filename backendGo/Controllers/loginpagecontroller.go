@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -36,5 +37,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		fmt.Print(err)
 		http.Error(w, "User or password are wrong", http.StatusForbidden)
 	}
+
+}
+
+func Logout(w http.ResponseWriter, r *http.Request) {
+	cookie, _ := r.Cookie("token")
+
+	cookie.MaxAge = 1
+	cookie.Expires = time.Now().Add(1 * time.Second)
+
+	http.SetCookie(w, cookie)
 
 }

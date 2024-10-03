@@ -65,3 +65,21 @@ export const modifyExercise = async (updatedExercise) => {
   }
   return response.json();
 };
+
+export const addExercise = async (updatedExercise) => {
+  const response = await fetch(`${API_URL}/exercise/post`, {
+    credentials: 'include',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedExercise),
+  });
+  if (response.status === 403 || response.status === 401) {
+    localStorage.setItem('logged', 'false');
+  }
+  if (!response.ok) {
+    throw new Error('Failed to modify exercise');
+  }
+  return response.json();
+};
