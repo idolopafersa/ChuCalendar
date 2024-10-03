@@ -130,9 +130,9 @@ func PostMeal(nmeal structmodels.NewMeal) (int, error) {
 
 }
 
-func DelMeal(name string) error {
-	query := "DELETE FROM Meals WHERE name = ?"
-	_, err := db.Exec(query, name)
+func DelMeal(id string) error {
+	query := "DELETE FROM Meals WHERE id = ?"
+	_, err := db.Exec(query, id)
 	fmt.Print(err)
 	return err
 }
@@ -145,12 +145,12 @@ func UpdateMeal(meal structmodels.Meal) error {
 	return err
 }
 
-func GetExercise(name string) (structmodels.Exercise, error) {
+func GetExercise(id string) (structmodels.Exercise, error) {
 	var resul structmodels.Exercise
-	fmt.Print(name)
-	query := "SELECT * FROM Exercises WHERE name = ?"
+	fmt.Print(id)
+	query := "SELECT * FROM Exercises WHERE id = ?"
 
-	err := db.QueryRow(query, name).Scan(&resul.ID, &resul.Name, &resul.Sets, &resul.Repetitions, &resul.Description, &resul.PhotoURL)
+	err := db.QueryRow(query, id).Scan(&resul.ID, &resul.Name, &resul.Sets, &resul.Repetitions, &resul.Description, &resul.PhotoURL)
 	return resul, err
 }
 
@@ -168,18 +168,18 @@ func PostExercise(nexercise structmodels.NewExercise) (int, error) {
 	}
 }
 
-func DelExercise(name string) error {
+func DelExercise(id string) error {
 
-	query := "DELETE FROM Exercises where Name = ?"
-	_, err := db.Exec(query, name)
+	query := "DELETE FROM Exercises where id = ?"
+	_, err := db.Exec(query, id)
 	fmt.Print(err)
 	return err
 }
 
 func PutExercise(newexercise structmodels.Exercise) error {
-	query := `UPDATE Exercise SET name = ?, description = ?, calories = ?, proteins = ?, fats = ?, carbs = ?, photo_url = ? WHERE id = ?`
+	query := `UPDATE Exercises SET name = ?, description = ?, repetitions = ?, description = ?,  photo_url = ? WHERE id = ?`
 
-	_, err := db.Exec(query, newexercise.Name, newexercise.Sets, newexercise.Repetitions, newexercise.Description, newexercise.ID)
+	_, err := db.Exec(query, newexercise.Name, newexercise.Sets, newexercise.Repetitions, newexercise.Description, newexercise.PhotoURL, newexercise.ID)
 	fmt.Print(err)
 	return err
 }

@@ -12,22 +12,30 @@ import (
 func GetExercise(w http.ResponseWriter, r *http.Request) {
 	var exe structmodels.Exercise
 
-	name := r.URL.Query().Get("name")
+	id := r.URL.Query().Get("id")
 
-	if name == "" {
+	if id == "" {
 		http.Error(w, "Name parameter is missing", http.StatusBadRequest)
 		return
 	}
-	fmt.Println(r.Header.Get("Authorization"))
-	if err := security.VerifyToken(r.Header.Get("Authorization")); err != nil {
-		fmt.Print(err)
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
+		return
+	}
+
+	// Extract the JWT from the cookie value
+	jwtToken := cookie.Value
+
+	if err := security.VerifyToken(jwtToken); err != nil {
+		fmt.Println(err)
 		http.Error(w, "Invalid JWT", http.StatusForbidden)
 		return
 	}
 
-	exe, err := driver.GetExercise(name)
-	if err != nil {
-		fmt.Print(err)
+	exe, erre := driver.GetExercise(id)
+	if erre != nil {
+		fmt.Print(erre)
 		http.Error(w, "Exercise not found", http.StatusNotFound)
 		return
 	}
@@ -73,14 +81,16 @@ func PostExercise(w http.ResponseWriter, r *http.Request) {
 
 func DelExercise(w http.ResponseWriter, r *http.Request) {
 
-	name := r.URL.Query().Get("name")
+	id := r.URL.Query().Get("id")
 
-	if name == "" {
-		http.Error(w, "Name parameter is missing", http.StatusBadRequest)
+	if id == "" {
+
+		http.Error(w, "id parameter is missing", http.StatusBadRequest)
 		return
 	}
 	cookie, err := r.Cookie("token")
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, "Unauthorized: No valid cookie", http.StatusUnauthorized)
 		return
 	}
@@ -94,7 +104,7 @@ func DelExercise(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	erre := driver.DelExercise(name)
+	erre := driver.DelExercise(id)
 	if erre != nil {
 		fmt.Print(err)
 		http.Error(w, "Exercise not found", http.StatusNotFound)
@@ -128,6 +138,7 @@ func PutExercise(w http.ResponseWriter, r *http.Request) {
 	erre := driver.PutExercise(exercise)
 	fmt.Print(err)
 	if erre != nil {
+		fmt.Print(erre)
 		http.Error(w, "Error al actualizar el ejercicio", http.StatusInternalServerError)
 		return
 	}
