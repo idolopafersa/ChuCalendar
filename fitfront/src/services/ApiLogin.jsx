@@ -55,10 +55,11 @@ export const RegisterUser = async (user,mail, password) => {
 
 
 export const Logout = async () => {
-        await fetch(`${API_URL}/api/logout"`, {
+        await fetch(`${API_URL}/api/logout`, {
             method: 'GET',
             credentials: 'include', 
         });
+        localStorage.removeItem("username")
         localStorage.setItem("logged","false")
        
         

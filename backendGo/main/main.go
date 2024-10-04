@@ -34,7 +34,7 @@ func main() {
 	r.HandleFunc("/api/meal/getall", controllers.AllMeals).Methods("GET")
 	r.HandleFunc("/api/meal/get", controllers.GetMeal).Methods("GET")
 	r.HandleFunc("/api/meal/post", controllers.PostMeal).Methods("POST")
-	r.HandleFunc("/api/meal/delete", controllers.DelMeal).Methods("DELETE")
+	r.HandleFunc("/api/meal/del", controllers.DelMeal).Methods("DELETE")
 	r.HandleFunc("/api/meal/put", controllers.PutMeal).Methods("PUT")
 
 	//Para las rutinas, get post put

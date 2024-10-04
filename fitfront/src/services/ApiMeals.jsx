@@ -12,7 +12,7 @@ export const fetchAllMeals = async () => {
 
 
 export const fetchMeals = async (id) => {
-  const response = await fetch(`${API_URL}/meal/get${id}`,{
+  const response = await fetch(`${API_URL}/meal/get?id=${id}`,{
     credentials:'include', 
   });
   if (!response.ok) {
@@ -23,7 +23,7 @@ export const fetchMeals = async (id) => {
 
 // Delete a meal by ID
 export const delMeal = async (id) => {
-  const response = await fetch(`${API_URL}/meal/del${id}`, { 
+  const response = await fetch(`${API_URL}/meal/del?id=${id}`, { 
     credentials: 'include', 
     method: 'DELETE' });
   if (!response.ok) {

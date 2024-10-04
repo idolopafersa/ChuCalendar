@@ -77,10 +77,10 @@ func PostMeal(w http.ResponseWriter, r *http.Request) {
 }
 
 func DelMeal(w http.ResponseWriter, r *http.Request) {
-	name := r.URL.Query().Get("name")
+	id := r.URL.Query().Get("id")
 
-	if name == "" {
-		http.Error(w, "Name parameter is missing", http.StatusBadRequest)
+	if id == "" {
+		http.Error(w, "id parameter is missing", http.StatusBadRequest)
 		return
 	}
 
@@ -99,9 +99,9 @@ func DelMeal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Print(name)
+	fmt.Print(id)
 
-	erre := driver.DelMeal(name)
+	erre := driver.DelMeal(id)
 	if erre != nil {
 		http.Error(w, "No Meal", http.StatusNotFound)
 	}

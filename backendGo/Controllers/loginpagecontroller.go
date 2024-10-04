@@ -43,9 +43,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 func Logout(w http.ResponseWriter, r *http.Request) {
 	cookie, _ := r.Cookie("token")
 
-	cookie.MaxAge = 1
-	cookie.Expires = time.Now().Add(1 * time.Second)
-
+	cookie.MaxAge = -1
+	cookie.Expires = time.Unix(0, 0)
+	cookie.Path = "/"
+	cookie.HttpOnly = true
+	cookie.Secure = true
+	cookie.SameSite = http.SameSiteStrictMode
 	http.SetCookie(w, cookie)
 
 }

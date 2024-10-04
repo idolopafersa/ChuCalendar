@@ -1,12 +1,12 @@
 import { useState, useMemo } from 'react';
 import Button from 'react-bootstrap/Button';
 import './Datepicker.css';
-
+import {useNavigate} from 'react-router-dom';
 const weekDays = { en: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] }; // English weekday names
 
 const DatePicker = ({ selectedDate, onChange }) => {
   const today = new Date();
-  
+  const navigate = useNavigate();
   // Parse the selectedDate if it exists, otherwise default to today
   const [showDate, setShowDate] = useState(
     selectedDate ? new Date(selectedDate) : today
@@ -102,11 +102,10 @@ const DatePicker = ({ selectedDate, onChange }) => {
 
       {/* Action Buttons */}
       <div className="hl-action-buttons d-flex justify-content-between mt-3 flex-wrap">
-        <Button variant="success" useNavigate="/exercises" className="m-1">Exercises</Button>
-        <Button variant="info" 
-       useNavigate="/meals"   className="m-1">Meals</Button>
-        <Button variant="warning" useNavigate="/routines"   className="m-1">Routines</Button>
-      </div>
+  <Button variant="success" onClick={() => navigate("/exercises")} className="m-1">Exercises</Button>
+  <Button variant="info" onClick={() => navigate("/meals")} className="m-1">Meals</Button>
+  <Button variant="warning" onClick={() => navigate("/routines")} className="m-1">Routines</Button>
+</div>
     </div>
   );
 };

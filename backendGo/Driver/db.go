@@ -108,7 +108,7 @@ func GetMeal(id string) (structmodels.Meal, error) {
 	fmt.Printf("LLEGO AQUI con ID: %s", id)
 	query := "SELECT * FROM Meals WHERE id = ?"
 
-	err := db.QueryRow(query, id).Scan(&meal.ID, &meal.Name, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.PhotoURL)
+	err := db.QueryRow(query, id).Scan(&meal.ID, &meal.Description, &meal.Calories, &meal.Proteins, &meal.Fats, &meal.Carbs, &meal.PhotoURL, &meal.Name)
 	fmt.Print(err)
 
 	return meal, err
