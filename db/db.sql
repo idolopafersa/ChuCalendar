@@ -40,10 +40,18 @@ CREATE TABLE `DayMeals` (
 LOCK TABLES `DayMeals` WRITE;
 /*!40000 ALTER TABLE `DayMeals` DISABLE KEYS */;
 INSERT INTO `DayMeals` VALUES
+(60,8),
 (33,9),
 (38,9),
+(45,9),
+(50,10),
+(60,10),
 (33,11),
-(38,12);
+(57,11),
+(38,12),
+(51,12),
+(48,13),
+(54,16);
 /*!40000 ALTER TABLE `DayMeals` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,7 +72,7 @@ CREATE TABLE `Days` (
   KEY `routine_id` (`routine_id`),
   CONSTRAINT `Days_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `Users` (`id`),
   CONSTRAINT `Days_ibfk_3` FOREIGN KEY (`routine_id`) REFERENCES `Routines` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,7 +82,7 @@ CREATE TABLE `Days` (
 LOCK TABLES `Days` WRITE;
 /*!40000 ALTER TABLE `Days` DISABLE KEYS */;
 INSERT INTO `Days` VALUES
-(33,13,'2024-09-29',12),
+(33,13,'2024-09-29',10),
 (34,13,'2024-09-27',NULL),
 (35,13,'2024-09-28',NULL),
 (36,13,'2024-09-18',NULL),
@@ -85,7 +93,23 @@ INSERT INTO `Days` VALUES
 (41,18,'2024-10-17',NULL),
 (42,18,'2024-09-13',NULL),
 (43,18,'2024-09-21',NULL),
-(44,18,'2024-09-01',NULL);
+(44,18,'2024-09-01',NULL),
+(45,13,'2024-09-30',10),
+(46,13,'2024-09-25',NULL),
+(47,13,'2024-09-24',NULL),
+(48,13,'2024-09-17',10),
+(49,13,'2024-09-03',NULL),
+(50,13,'2024-09-09',13),
+(51,13,'2024-09-10',4),
+(52,13,'2024-09-11',NULL),
+(53,13,'2024-09-08',NULL),
+(54,13,'2024-10-03',10),
+(55,13,'2024-10-02',NULL),
+(56,13,'2024-10-10',NULL),
+(57,13,'2024-09-01',9),
+(58,13,'2024-09-22',NULL),
+(59,13,'2024-09-23',NULL),
+(60,13,'2024-10-15',10);
 /*!40000 ALTER TABLE `Days` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -104,7 +128,7 @@ CREATE TABLE `Exercises` (
   `description` text DEFAULT NULL,
   `photo_url` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -115,7 +139,6 @@ LOCK TABLES `Exercises` WRITE;
 /*!40000 ALTER TABLE `Exercises` DISABLE KEYS */;
 INSERT INTO `Exercises` VALUES
 (6,'Push Ups',3,12,'A basic upper body exercise.','https://example.com/images/pushups.jpg'),
-(7,'Push_Ups',3,12,'A basic upper body exercise.','https://example.com/images/pushups.jpg'),
 (8,'Squat',4,12,'A fundamental lower body exercise.','http://example.com/squat.jpg'),
 (9,'SquatPutilla',4,12,'A fundamental lower body exercise.','http://example.com/squat.jpg'),
 (10,'Bench Press',3,10,'A strength training exercise that targets the chest, shoulders, and triceps.','https://example.com/photos/bench_press.jpg'),
@@ -127,7 +150,8 @@ INSERT INTO `Exercises` VALUES
 (16,'Plank',3,NULL,'A core strengthening exercise that involves holding a position similar to a push-up.','https://example.com/photos/plank.jpg'),
 (17,'Bicep Curl',3,12,'An isolation exercise that targets the biceps using dumbbells or a barbell.','https://example.com/photos/bicep_curl.jpg'),
 (18,'Tricep Dips',3,10,'An exercise that targets the triceps, performed using parallel bars or a bench.','https://example.com/photos/tricep_dips.jpg'),
-(19,'Leg Press',4,10,'A compound exercise that targets the quadriceps, hamstrings, and glutes using a leg press machine.','https://example.com/photos/leg_press.jpg');
+(19,'Leg Press',4,10,'A compound exercise that targets the quadriceps, hamstrings, and glutes using a leg press machine.','https://example.com/photos/leg_press.jpg'),
+(20,'Ejercicio de prueba 3',32,34,'Ejercicio de prueba 3','Ejercicio de prueba 3');
 /*!40000 ALTER TABLE `Exercises` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,11 +169,11 @@ CREATE TABLE `Meals` (
   `proteins` int(11) DEFAULT NULL,
   `fats` int(11) DEFAULT NULL,
   `carbs` int(11) DEFAULT NULL,
-  `photo_url` text DEFAULT NULL,
+  `photo_url` varchar(255) DEFAULT NULL,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `Meals_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,16 +183,16 @@ CREATE TABLE `Meals` (
 LOCK TABLES `Meals` WRITE;
 /*!40000 ALTER TABLE `Meals` DISABLE KEYS */;
 INSERT INTO `Meals` VALUES
-(7,'A healthy salad with grilled chicken, mixed greens, and vinaigrette.',350,30,15,20,'https://example.com/photos/grilled_chicken_salad.jpg','Grilled Chicken Salad'),
-(8,'Tender beef strips stir-fried with vegetables and soy sauce.',450,35,20,30,'https://example.com/photos/beef_stir_fry.jpg','Beef Stir Fry'),
+(7,'A healthy salad with grilled chicken, mixed greens, and vinaigrette.',400,30,15,20,'https://example.com/photos/grilled_chicken_salad.jpg','Grilled Chicken Salad'),
+(8,'Tender beef strips stir-fried with vegetables and soy sauce.',471,354,20,30,'https://example.com/photos/beef_stir_fry.jpg','Beef Stir Fry'),
 (9,'A nutritious bowl with quinoa, black beans, corn, and avocado.',400,15,12,60,'https://example.com/photos/vegetarian_quinoa_bowl.jpg','Vegetarian Quinoa Bowl'),
 (10,'Pasta with fresh vegetables, olive oil, and parmesan cheese.',500,18,10,80,'https://example.com/photos/pasta_primavera.jpg','Pasta Primavera'),
 (11,'Baked salmon fillet served with roasted asparagus.',600,40,25,10,'https://example.com/photos/salmon_asparagus.jpg','Salmon with Asparagus'),
 (12,'Toasted bread topped with avocado and poached eggs.',300,12,20,25,'https://example.com/photos/egg_avocado_toast.jpg','Egg and Avocado Toast'),
 (13,'Spicy chili made with ground turkey, beans, and tomatoes.',450,30,15,40,'https://example.com/photos/turkey_chili.jpg','Turkey Chili'),
 (14,'A refreshing smoothie bowl topped with fresh fruits and granola.',350,5,8,65,'https://example.com/photos/mango_smoothie_bowl.jpg','Mango Smoothie Bowl'),
-(15,'Bell peppers stuffed with rice, beans, and cheese.',400,18,10,60,'https://example.com/photos/stuffed_bell_peppers.jpg','Stuffed Bell Peppers'),
-(16,'A rich and creamy protein shake with chocolate flavor.',250,30,5,20,'https://example.com/photos/chocolate_protein_shake.jpg','Chocolate Protein Shake');
+(16,'A rich and creamy protein shake with chocolate flavor.',250,30,5,20,'https://example.com/photos/chocolate_protein_shake.jpg','Chocolate Protein Shake'),
+(19,'Comidita Rica',2372,23,232,23232,'Es una rutina muy chula','Comida de prueba');
 /*!40000 ALTER TABLE `Meals` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -195,6 +219,9 @@ CREATE TABLE `RoutineExercises` (
 
 LOCK TABLES `RoutineExercises` WRITE;
 /*!40000 ALTER TABLE `RoutineExercises` DISABLE KEYS */;
+INSERT INTO `RoutineExercises` VALUES
+(10,10),
+(10,11);
 /*!40000 ALTER TABLE `RoutineExercises` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -277,4 +304,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2024-09-29 20:39:11
+-- Dump completed on 2024-10-04  9:54:05
