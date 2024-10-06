@@ -1,11 +1,11 @@
-const API_URL = 'http://localhost:8080'
+const API_URL = 'https://calendarapi.fernandezpablo.es/api';
 
 
 
 export const LoginUser = async (user, password) => {
     try {
 
-        const response = await fetch(`${API_URL}/api/login`, {
+        const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
             credentials: "include",
             headers: {
@@ -30,7 +30,7 @@ export const LoginUser = async (user, password) => {
 
 export const RegisterUser = async (user,mail, password) => {
     try {
-        const response = await fetch(`${API_URL}/api/user/register`, {
+        const response = await fetch(`${API_URL}/user/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export const RegisterUser = async (user,mail, password) => {
 
 
 export const Logout = async () => {
-        await fetch(`${API_URL}/api/logout`, {
+        await fetch(`${API_URL}/logout`, {
             method: 'GET',
             credentials: 'include', 
         });

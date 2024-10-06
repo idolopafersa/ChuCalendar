@@ -18,21 +18,21 @@ export function Login() {
   const [showRegister, setShowRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState(''); // Handle error messages
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   // Function that handles login or registration based on the state of showRegister
   const handleSubmit = async () => {
     try {
-      
       if (showRegister) {
         // If in registration mode
         await RegisterUser(user, email, password);
         localStorage.setItem('logged', 'true');
-        navigate("/home")
+        navigate("/home");
       } else {
         // If in login mode
         await LoginUser(user, password);
         localStorage.setItem('logged', 'true'); // Save session state
-        navigate("/home")
+        navigate("/home");
       }
     } catch (error) {
       setErrorMessage(error.message); // Handle errors
@@ -47,7 +47,8 @@ export function Login() {
             <div className="text-center">
               <img
                 src={logo} // Use the imported logo
-                style={{ width: '185px' }} alt="logo" // Set the width of the logo
+                style={{ width: '185px' }} 
+                alt="logo" // Set the width of the logo
               />
               <h4 className="mt-1 mb-5 pb-1">Welcome to ChuCalendar</h4>
             </div>
@@ -112,14 +113,14 @@ export function Login() {
 
         <MDBCol md='6' className="mb-5 d-none d-md-flex align-items-center gradient-custom-2">
           <div className="text-white px-3 py-4 p-md-5 mx-md-4">
-            <h4 className="mb-4">What we offer</h4>
-            <p className="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-              tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            <h4 className="mb-4">What's ChuCalendar</h4>
+            <p className="small mb-0">
+              <strong>ChuCalendar</strong> is your personal progress-tracking web service, designed to help you organize your fitness routines, exercises, and meals all in one place. You can easily select a day, add routines, log exercises, and track your meals to stay on top of your health and fitness goals. Whether you're focusing on a workout plan or building a balanced diet, ChuCalendar makes it simple to monitor your progress over time.
+              <br /><br />
+              This is <strong>Version 1</strong> of ChuCalendar, so if you encounter any issues or have suggestions for improvement, feel free to let me know on GitHub at <a href="https://github.com/idolopafersa/ChuCalendar" target="_blank" rel="noopener noreferrer">idolopafersa/ChuCalendar</a>. For more information about me and my projects, visit my personal webpage at <a href="https://fernandezpablo.es" target="_blank" rel="noopener noreferrer">fernandezpablo.es</a>.
             </p>
           </div>
         </MDBCol>
-
       </MDBRow>
     </MDBContainer>
   );

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api'; // Adjust to your API
+const API_URL = 'https://calendarapi.fernandezpablo.es/api'; // Adjust to your API
 
 
 export const fetcheExercises = async () => {

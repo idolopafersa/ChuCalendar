@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8080/api'; // Replace with your actual API
+const API_URL = 'https://calendarapi.fernandezpablo.es/api'; // Replace with your actual API
 
 export const fetchAllMeals = async () => {
   const response = await fetch(`${API_URL}/meal/getall`,{
