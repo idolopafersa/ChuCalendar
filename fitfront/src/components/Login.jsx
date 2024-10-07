@@ -24,14 +24,11 @@ export function Login() {
   const handleSubmit = async () => {
     try {
       if (showRegister) {
-        // If in registration mode
+        
         await RegisterUser(user, email, password);
-        localStorage.setItem('logged', 'true');
-        navigate("/home");
       } else {
-        // If in login mode
-        await LoginUser(user, password);
-        localStorage.setItem('logged', 'true'); // Save session state
+        await LoginUser(user, password); 
+        localStorage.setItem('logged', 'true'); 
         navigate("/home");
       }
     } catch (error) {

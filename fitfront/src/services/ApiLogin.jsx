@@ -20,7 +20,6 @@ export const LoginUser = async (user, password) => {
             throw new Error('Login failed');
         }
         localStorage.setItem("username", user)
-        localStorage.setItem("logged","true")
         return response; 
     } catch (error) {
         console.error('Error during login:', error);
@@ -44,8 +43,6 @@ export const RegisterUser = async (user,mail, password) => {
         if (!response.ok) {
             throw new Error('Registration failed');
         }
-
-        
         return response; 
     } catch (error) {
         console.error('Error during login:', error);
