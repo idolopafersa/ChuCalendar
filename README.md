@@ -2,6 +2,7 @@
 
 Welcome to **ChuCalendar**! This is my first webpage project so if you have any suggestions please share ,  I created a  calendar application where you can keep your alimentation and exercise progress, ideal for people like me that has to measure everything. The first Fase is completed, it has a basic curls of exercises,meals and routines, as well as the day management.I started this proyect alone but with a group we are going to add more functionalities like tracking progress, gym tracker, weight, a new fresh UI.. etc.
 
+**Update** Im going to continue this proyect with a few friends, ill create another repository, I wont delete this one bc its my first one.
 ## I used
 
 - **React**: A JavaScript library for building user interfaces.
